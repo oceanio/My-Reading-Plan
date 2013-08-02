@@ -9,3 +9,4 @@ My Reading Plan
 | 2   | MapReduce Algo for text processing | ongoing |
 | 3   | MongoDB Applied Design Patterns | ongoing |
 | 4   | Deep Learning for NLP | ongoing |
+| 5   | Hadoop: The Definitive Guide | planned |
