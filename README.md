@@ -1,4 +1,4 @@
-My Reading Plan
+My Intensive Reading Plan
 ==========================
 
 
