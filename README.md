@@ -11,4 +11,4 @@ My Reading Plan
 | 04   | Deep Learning for NLP | ongoing (p39) |
 | 05   | Hadoop: The Definitive Guide | planned |
 | 06   | Mahout in Action | finished |
-| 07   | Speech and Language Processing | ongoing (ch02) |
+| 07   | Speech and Language Processing | ongoing (ch05) |
