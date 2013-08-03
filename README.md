@@ -12,3 +12,4 @@ My Intensive Reading Plan
 | 05   | Hadoop: The Definitive Guide | planned |
 | 06   | Mahout in Action | finished |
 | 07   | Speech and Language Processing | ongoing (ch05) |
+| 08   | Big Data for Chimps | planned |
