@@ -425,5 +425,87 @@ response:
         ]
     }
 
+## Candidate Operations
+
+### Candidate Search
+
+request: 
+
+    POST /api/candidate_search
+    data : {
+        manditory_filters : {
+            location    : {
+                type    : "all/country/region/province/city/...",
+                name    : ""
+            },
+            company     : "",
+            brand       : "",
+            industry    : "",
+            function    : "",
+            work_exp    : [
+                {
+                    company : {
+                        name            : "",
+                        size            : "",
+                        type            : "WOFE/JV/SOE/Private/Fortune500",
+                        nationality     : "",
+                        is_serving_now  : true/false
+                    },
+                    position            : "",
+                    length_of_service   : 0.0,
+                },
+                ...
+            ],
+            edu_exp     : [
+                {
+                    school      : "",
+                    degree      : "",
+                    grad_year   : ""
+                },
+                ...
+            ],
+            salary : {
+                ...
+            },
+            language : {
+                ...
+            },
+            years_of_work : 0,
+        },
+        optional_filters : {
+            ...                             //same as manditory filters
+        },
+        sort_by : "...",
+        from    : 0,
+        size    : 10,
+    }
+
+response: 
+
+    data : {
+        total : 0,
+        hits : [
+            {
+                _id : 1,
+                _source : {
+                    name        : "",
+                    title       : "",
+                    company     : "",
+                    photo       : "",       //url
+                    location    : "",
+                    salary      : "",
+                    mobile      : "",
+                    email       : "",
+                    highlight   : "",
+                    classification : "",
+                    motivation  : "",
+                    comments    : "",
+                    ...
+                }
+            },
+            ...
+        ]
+    }
+
 
 
