@@ -275,7 +275,7 @@ response:
         }
     }
 
-### Company Groups List
+### Company Group List
 
 request: 
 
@@ -306,6 +306,120 @@ response:
                     ...,                    // any attributes we want
                     description : "",
                 }
+            },
+            ...
+        ]
+    }
+
+## Company Role Operations
+
+### Company Role Add
+
+request: 
+
+    POST /api/company_role_add
+    data : {
+        company     : "",           //string, company name
+        role        : "",           //string, role
+        permissions : [             //array of strings, role permissions
+            ...
+        ]
+    }
+
+response: 
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+        role_id     : 0             //int, role id
+    }
+
+### Company Role Remove
+
+request: 
+
+    POST /api/company_role_rmv
+    data : {
+        role_id     : 0,            //int, role id, key to delete a role
+    }
+
+response: 
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : ""            //string, error description
+    }
+
+### Company Role Set
+
+request: 
+
+    POST /api/company_role_set
+    data : {
+        role_id     : 0,            //int, role id, key to edit a role's permission
+        permissions : [             //array of strings, role permissions
+            ...
+        ]
+    }
+
+response: 
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+    }
+
+### Company Role Get
+
+request: 
+
+    POST /api/company_role_get
+    data : {
+        role_id     : 0,            //int, group id, key to get a role's permission
+    }
+
+response: 
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+        role_id     : 0,            //int, role id
+        company     : "",           //string, company name
+        permissions : [             //array of strings, role permissions
+            ...
+        ]
+    }
+
+### Company Role List
+
+request: 
+
+    POST /api/company_group_list
+    data : {
+        filter : {
+            company     : "",       //string, company name
+            ...                     //maybe some other filters
+        },
+        page_no     : 0,            //current page number
+        page_step   : 0,            //how many items you want to show per page
+    }
+
+response: 
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+        page_no     : 0,            //current page number
+        prev_page   : 0,            //prev page no
+        next_page   : 0,            //next page no
+        last_page   : 0,            //last page no
+        group_info  : [
+            {
+                role_id     : 0,            //int
+                company     : "",           //string, company name
+                permissions : [             //array of strings, role permissions
+                    ...
+                ]
             },
             ...
         ]
