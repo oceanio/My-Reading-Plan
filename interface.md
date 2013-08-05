@@ -33,7 +33,10 @@ response:
 
     HTTP 302                        //redirect, browser will process this ret
 
-### Add User
+
+## Company User Operations
+
+### Company User Add
 
 request: 
 
@@ -69,7 +72,7 @@ response:
     }
 
 
-### Remove User
+### Company User Remove
 
 request: 
 
@@ -85,11 +88,11 @@ response:
         err_str     : ""            //string, error description
     }
 
-### Edit User
+### Company User Set
 
 request: 
 
-    POST /api/company_user_edit
+    POST /api/company_user_set
     data : {
         user_id     : 0,            //int, user id, key to edit a user's profile
         attributes  : {
@@ -118,7 +121,7 @@ response:
     }
 
 
-### Get User
+### Company User Get
 
 request: 
 
@@ -153,7 +156,7 @@ response:
         ]
     }
 
-### List Users
+### Company User List
 
 request: 
 
@@ -190,7 +193,9 @@ response:
         ]
     }
 
-### Add Group
+## Company Group Operations
+
+### Company Group Add
 
 request: 
 
@@ -212,7 +217,7 @@ response:
         group_id    : 0             //int, group id
     }
 
-### Remove Group
+### Company Group Remove
 
 request: 
 
@@ -228,11 +233,11 @@ response:
         err_str     : ""            //string, error description
     }
 
-### Edit Group
+### Company Group Set
 
 request: 
 
-    POST /api/company_group_edit
+    POST /api/company_group_set
     data : {
         group_id    : 0,            //int, group id, key to edit a group's profile
         attributes  : {
@@ -248,7 +253,7 @@ response:
         err_str     : "",           //string, error description
     }
 
-### Get User
+### Company Group Get
 
 request: 
 
@@ -270,7 +275,7 @@ response:
         }
     }
 
-### List Groups
+### Company Groups List
 
 request: 
 
@@ -305,3 +310,6 @@ response:
             ...
         ]
     }
+
+
+
