@@ -11,7 +11,7 @@ Notes on “MongoDB Applied Design Patterns”
 
 ### Chapter 3 Mimicking Transactional Behavior
 
-* MongoDB不支持事务，所以删除多个文档时，有异常的可能，所以如果需要事务保护，需要自己实现（比较弱）  
+* MongoDB不支持事务，所以多文档操作有异常的可能，所以如果需要事务保护，需要自己实现（比较弱）  
 
 Transaction的文档结构设计如下：
   
