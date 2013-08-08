@@ -112,5 +112,11 @@ account的文档结构设计如下：
               '$pull': { 'txns': { '_id': txn['_id'] } } })
         db.transaction.remove({'_id': txn['_id']})
 
+* * *
+
+### Chapter 4 Operational Intelligence
+
+使用MongoDB存储日志
+
 
 
