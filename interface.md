@@ -488,6 +488,7 @@ response:
             {
                 _id : 1,
                 _source : {
+                    id          : 0,
                     name        : "",
                     title       : "",
                     company     : "",
@@ -508,4 +509,192 @@ response:
     }
 
 
+### Candidate Endorsement Get
 
+request: 
+
+    POST /api/candidate_endorsement_get
+    data : {
+        candidate_id     : 0,            //int, candidate id
+    }
+
+response:
+
+    data : {
+        candidate_id    : 0,
+        endorsements    : [
+            {
+                candidate_id    : 0,
+                reference       : "",
+            },
+            ...
+        ]
+    }
+
+### Similar Candidate Search
+
+request:
+
+    POST /api/candidate_search_similar
+    data : {
+        candidate_id    : 0
+    }
+    
+response:
+
+    data : {
+        total : 0,
+        hits : [
+            {
+                _id : 1,
+                _source : {
+                    id          : 0,
+                    name        : "",
+                    title       : "",
+                    company     : "",
+                    photo       : "",       //url
+                    location    : "",
+                    salary      : "",
+                    mobile      : "",
+                    email       : "",
+                    highlight   : "",
+                    classification : "",
+                    motivation  : "",
+                    comments    : "",
+                    ...
+                }
+            },
+            ...
+        ]
+    }
+
+### Search Criteria Save
+
+request:
+
+    POST /api/candidate_search_criteria_save
+    data : {
+        manditory_filters : {
+            location    : {
+                type    : "all/country/region/province/city/...",
+                name    : ""
+            },
+            company     : "",
+            brand       : "",
+            industry    : "",
+            function    : "",
+            work_exp    : [
+                {
+                    company : {
+                        name            : "",
+                        size            : "",
+                        type            : "WOFE/JV/SOE/Private/Fortune500",
+                        nationality     : "",
+                        is_serving_now  : true/false
+                    },
+                    position            : "",
+                    length_of_service   : 0.0,
+                },
+                ...
+            ],
+            edu_exp     : [
+                {
+                    school      : "",
+                    degree      : "",
+                    grad_year   : ""
+                },
+                ...
+            ],
+            salary : {
+                ...
+            },
+            language : {
+                ...
+            },
+            years_of_work : 0,
+        },
+        optional_filters : {
+            ...                             //same as manditory filters
+        },
+        sort_by : "...",
+    }
+
+response:
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+    }
+    
+### Search History List
+
+request:
+
+    GET /api/candidate_search_history_list
+    data : {
+        page_no     : 0,            //current page number
+        page_step   : 0,            //how many items you want to show per page
+    }
+    
+response:
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+        page_no     : 0,            //current page number
+        prev_page   : 0,            //prev page no
+        next_page   : 0,            //next page no
+        last_page   : 0,            //last page no
+        history : [
+            {
+                id          : 0,
+                datetime    : "",
+                criteria    : {
+                    manditory_filters : {
+                        location    : {
+                            type    : "all/country/region/province/city/...",
+                            name    : ""
+                        },
+                        company     : "",
+                        brand       : "",
+                        industry    : "",
+                        function    : "",
+                        work_exp    : [
+                            {
+                                company : {
+                                    name            : "",
+                                    size            : "",
+                                    type            : "WOFE/JV/SOE/Private/Fortune500",
+                                    nationality     : "",
+                                    is_serving_now  : true/false
+                                },
+                                position            : "",
+                                length_of_service   : 0.0,
+                            },
+                            ...
+                        ],
+                        edu_exp     : [
+                            {
+                                school      : "",
+                                degree      : "",
+                                grad_year   : ""
+                            },
+                            ...
+                        ],
+                        salary : {
+                            ...
+                        },
+                        language : {
+                            ...
+                        },
+                        years_of_work : 0,
+                    },
+                    optional_filters : {
+                        ...                             //same as manditory filters
+                    },
+                    sort_by : "...",
+                }
+            },
+            ...
+        ]
+    }
