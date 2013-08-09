@@ -425,7 +425,7 @@ response:
         ]
     }
 
-## Candidate Operations
+## Candidate Search Operations
 
 ### Candidate Search
 
@@ -793,7 +793,7 @@ response:
 
 request:
 
-    GET /api/candidate_saved_search_list
+    POST /api/candidate_saved_search_list
     data : {
         page_no     : 0,            //current page number
         page_step   : 0,            //how many items you want to show per page
@@ -824,4 +824,24 @@ response:
 ## Update Reminder Operations
 
 ### Update Reminder Create
+
+request: 
+
+    POST /api/company_reminder_create
+    data : {
+        search_criteria_id  : 0,
+        ...
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
