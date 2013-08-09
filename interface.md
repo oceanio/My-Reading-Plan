@@ -568,69 +568,11 @@ response:
         ]
     }
 
-### Search Criteria Save
-
-request:
-
-    POST /api/candidate_search_criteria_save
-    data : {
-        manditory_filters : {
-            location    : {
-                type    : "all/country/region/province/city/...",
-                name    : ""
-            },
-            company     : "",
-            brand       : "",
-            industry    : "",
-            function    : "",
-            work_exp    : [
-                {
-                    company : {
-                        name            : "",
-                        size            : "",
-                        type            : "WOFE/JV/SOE/Private/Fortune500",
-                        nationality     : "",
-                        is_serving_now  : true/false
-                    },
-                    position            : "",
-                    length_of_service   : 0.0,
-                },
-                ...
-            ],
-            edu_exp     : [
-                {
-                    school      : "",
-                    degree      : "",
-                    grad_year   : ""
-                },
-                ...
-            ],
-            salary : {
-                ...
-            },
-            language : {
-                ...
-            },
-            years_of_work : 0,
-        },
-        optional_filters : {
-            ...                             //same as manditory filters
-        },
-        sort_by : "...",
-    }
-
-response:
-
-    data : {
-        ret_code    : 0,            //int, 0 for success; other for failure
-        err_str     : "",           //string, error description
-    }
-    
 ### Search History List
 
 request:
 
-    GET /api/candidate_search_history_list
+    POST /api/candidate_search_history_list
     data : {
         page_no     : 0,            //current page number
         page_step   : 0,            //how many items you want to show per page
@@ -698,3 +640,188 @@ response:
             ...
         ]
     }
+
+## Serach Criteria Operations
+
+### Search Criteria Save
+
+request:
+
+    POST /api/candidate_search_criteria_save
+    data : {
+        manditory_filters : {
+            location    : {
+                type    : "all/country/region/province/city/...",
+                name    : ""
+            },
+            company     : "",
+            brand       : "",
+            industry    : "",
+            function    : "",
+            work_exp    : [
+                {
+                    company : {
+                        name            : "",
+                        size            : "",
+                        type            : "WOFE/JV/SOE/Private/Fortune500",
+                        nationality     : "",
+                        is_serving_now  : true/false
+                    },
+                    position            : "",
+                    length_of_service   : 0.0,
+                },
+                ...
+            ],
+            edu_exp     : [
+                {
+                    school      : "",
+                    degree      : "",
+                    grad_year   : ""
+                },
+                ...
+            ],
+            salary : {
+                ...
+            },
+            language : {
+                ...
+            },
+            years_of_work : 0,
+        },
+        optional_filters : {
+            ...                             //same as manditory filters
+        },
+        sort_by : "...",
+    }
+
+response:
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+        id          : 0,
+    }
+
+### Search Criteria Delete
+
+request:
+
+    POST /api/candidate_search_criteria_delete
+    data : {
+        id  : 0,
+    }
+
+response:
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+    }
+    
+
+### Saved Search Get
+
+request:
+
+    POST /api/candidate_saved_search_get
+    data : {
+        id  : 0,
+    }
+    
+response:
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+        page_no     : 0,            //current page number
+        prev_page   : 0,            //prev page no
+        next_page   : 0,            //next page no
+        last_page   : 0,            //last page no
+        {
+            id                  : 0,
+            datetime_create     : "",
+            datetime_update     : "",
+            criteria    : {
+                manditory_filters : {
+                    location    : {
+                        type    : "all/country/region/province/city/...",
+                        name    : ""
+                    },
+                    company     : "",
+                    brand       : "",
+                    industry    : "",
+                    function    : "",
+                    work_exp    : [
+                        {
+                            company : {
+                                name            : "",
+                                size            : "",
+                                type            : "WOFE/JV/SOE/Private/Fortune500",
+                                nationality     : "",
+                                is_serving_now  : true/false
+                            },
+                            position            : "",
+                            length_of_service   : 0.0,
+                        },
+                        ...
+                    ],
+                    edu_exp     : [
+                        {
+                            school      : "",
+                            degree      : "",
+                            grad_year   : ""
+                        },
+                        ...
+                    ],
+                    salary : {
+                        ...
+                    },
+                    language : {
+                        ...
+                    },
+                    years_of_work : 0,
+                },
+                optional_filters : {
+                    ...                             //same as manditory filters
+                },
+                sort_by : "...",
+            }
+        }
+    }
+
+### Saved Search List
+
+request:
+
+    GET /api/candidate_saved_search_list
+    data : {
+        page_no     : 0,            //current page number
+        page_step   : 0,            //how many items you want to show per page
+    }
+    
+response:
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+        page_no     : 0,            //current page number
+        prev_page   : 0,            //prev page no
+        next_page   : 0,            //next page no
+        last_page   : 0,            //last page no
+        history : [
+            {
+                id                  : 0,
+                datetime_create     : "",
+                datetime_update     : "",
+                criteria    : {
+                    ...,            //some abstracts to display
+                }
+            },
+            ...
+        ]
+    }
+
+## Update Reminder Operations
+
+### Update Reminder Create
+
