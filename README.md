@@ -13,3 +13,6 @@ My Intensive Reading Plan
 | 06   | Mahout in Action | finished |
 | 07   | Speech and Language Processing | ongoing (ch05) |
 | 08   | Big Data for Chimps | planned |
+| 09   | Machine Learning in Action | planned |
+
+
