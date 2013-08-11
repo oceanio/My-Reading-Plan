@@ -271,8 +271,6 @@ account的文档结构设计如下：
 
         同上，但是rotate数据库。缺点是程序会非常复杂。
 
-* * *
-
 #### 4.2 预处理报告
 
 + **One document per page per day, flat documents**
@@ -437,5 +435,26 @@ account的文档结构设计如下：
                 mean: 0,
                 ts: null });
     }'''
+
+### Chapter 5 Ecommerce
+
+#### 5.1 Product Catalog
+
+MongoDB不是关系型数据库，所以可以将不同种类的商品存储在一张表里面。
+
+**Index all the things**
+
+In ecommerce systems, we typically don’t know exactly what the user will be filtering on, so it’s a good idea to create a number of indexes on queries that are likely to happen. Although such indexing will slow down updates, a product catalog is only very infrequently updated, so this drawback is justified by the significant improvements in search speed. To sum up, if your application has a code path to execute a query, there should be an index to accelerate that query.
+
+**Sharding Concern**
+
+这种查询密集型的应用，要尽量将数据根据常用查询，把同类数据局限到少数几个节点上。
+
+**Scaling read performance without sharding**
+
+索引尽量少，但是读数据时，尽量多。In these situations, you can gain some additional read performance by allowing mongos to read from the secondary mongod instances in a replica set by configuring the
+read preference in the client.
+
+#### 5.2 Category Hierarchy
 
 
