@@ -833,12 +833,102 @@ request:
         ...
     }
 
+response:
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+        reminder_id : 0,
+    }
+
+### Update Reminder Delete
+
+request: 
+
+    POST /api/company_reminder_delete
+    data : {
+        reminder_id : 0,
+    }
+
+response:
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+    }
 
 
+### Update Reminder Set
 
+request: 
 
+    POST /api/company_reminder_set
+    data : {
+        reminder_id : 0,
+        search_criteria_id  : 0,
+        ...
+    }
 
+response:
 
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+    }
+
+### Update Reminder Get
+
+request: 
+
+    POST /api/company_reminder_get
+    data : {
+        reminder_id : 0,
+    }
+
+response:
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+        search_criteria_id  : 0,
+        ...
+    }
+
+### Update Reminder List
+
+request: 
+
+    POST /api/company_reminder_list
+    data : {
+        page_no     : 0,            //current page number
+        page_step   : 0,            //how many items you want to show per page
+    }
+
+response:
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+        reminders   : [
+            {
+                search_criteria_id  : 0,
+                ...
+            },
+            ...
+        ]
+    }
+
+## CV Operations
+
+### CV display
+
+we will use special control
+
+### Send Mail
+
+??
+
+## Position 
 
 
 
