@@ -208,10 +208,21 @@ Ideally, your shard key should have two characteristics:
 * Insertions are balanced between shards
 * Most queries can be routed to a subset of the shards to be satisfied
 
-**Option 1: Shard by time
-Although using the timestamp, or the ObjectId in the _id field, would distribute your data evenly among shards, these keys lead to two problems:
-* All inserts always flow to the same shard, which means that your shard cluster will have the same write throughput as a standalone instance.
-* Most reads will tend to cluster on the same shard, assuming you access recent data more frequently.
+
++ **Option 1: Shard by time**
+
+    Although using the timestamp, or the ObjectId in the _id field, would distribute your data evenly among shards, these keys lead to two problems:
+    * All inserts always flow to the same shard, which means that your shard cluster will have the same write throughput as a standalone instance.
+    * Most reads will tend to cluster on the same shard, assuming you access recent data more frequently.
+
++ **Option 2: Shard by a semi-random key**
+
+    Using this shard key, or any hashed value as a key, presents the following downsides:
+    * The shard key, and the index on the key, will consume additional space in the database.
+    * Queries, unless they include the shard key itself, must run in parallel on all shards, which may lead to degraded performance.
+    
+    This might be an acceptable trade-off in some situations. The workload of event logging systems tends to be heavily skewed toward writing; read performance may not be as critical as perfectly balanced write performance.
+
 
 
 
