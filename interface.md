@@ -10,6 +10,7 @@ request:
         company     : "",           //string, company name
         username    : "",           //string, user name
         password    : "",           //string, password encoded in md5
+        is_remember : 0,            //remember for a month
         is_redirect : true          //bool, whether to redirect if login success
     }
 
@@ -49,6 +50,7 @@ request:
             email       : "",
             telephone   : "",
             mobile      : "",
+            group_id    : 0,
             group_name  : "",
             ...,                    // any attributes we want
             description : "",
@@ -99,6 +101,7 @@ request:
             email       : "",
             telephone   : "",
             mobile      : "",
+            group_id    : 0,
             group_name  : "",
             ...,                    // any attributes we want
             description : "",
@@ -142,6 +145,7 @@ response:
             email       : "",
             telephone   : "",
             mobile      : "",
+            group_id    : 0,
             group_name  : "",
             ...,                    // any attributes we want
             description : "",
@@ -926,12 +930,78 @@ we will use special control
 
 ### Send Mail
 
-??
+??  
 
-## Position 
+## Job Operations
 
+### Position Create
 
+request: 
 
+    POST /api/company_position_create
+    data : {
+        company             : "",           //string, company name
+        job_profile         : {
+            job_titile              : "",
+            job_holder              : "",
+            requested_onboard_date  : "",
+            recruitment_requirement : {
+                age                 : 0,
+                gender              : "male/female/all",
+                marital_status      : "",
+                edu_degree          : "",
+                edu_major           : "",
+                location            : "",
+                salary              : "",
+                industry_background : "",
+                mnc_work_exp        : "",
+                english_level       : "",
+                leadership          : "",
+                certificates        : ""
+            },
+            job_description : {
+                tags : [
+                    "keywords",
+                    ...
+                ]
+            },
+            file_id         : 0,            //upload jd file id
+        }
+    }
 
+response:
 
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+        job_id      : 0,
+    }
 
+### Candidate Recommend
+
+what kind of interface?
+
+### Position Publish
+
+request:
+
+    POST /api/company_position_publish
+    data : {
+        job_id  : 0,
+        target  : [
+            "website/sns/...",
+            ...
+        ]
+    }
+
+response:
+
+    data : {
+        ret_code    : 0,            //int, 0 for success; other for failure
+        err_str     : "",           //string, error description
+        job_id      : 0,
+    }
+
+### Publisher Channel Management
+
+### Performance Review 
