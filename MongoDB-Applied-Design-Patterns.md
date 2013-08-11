@@ -208,6 +208,7 @@ Ideally, your shard key should have two characteristics:
 * Insertions are balanced between shards
 * Most queries can be routed to a subset of the shards to be satisfied
 
+下面是几种常用的shard key: 
 
 + **Option 1: Shard by time**
 
@@ -223,7 +224,50 @@ Ideally, your shard key should have two characteristics:
     
     This might be an acceptable trade-off in some situations. The workload of event logging systems tends to be heavily skewed toward writing; read performance may not be as critical as perfectly balanced write performance.
 
++ **Option 3: Shard by an evenly distributed key in the data set**
 
+    针对http日志这个例子, you might consider using the *path* field. This has a couple of advantages:
+    * Writes will tend to balance evenly among shards.
+    * Reads will tend to be selective and local to a single shard if the query selects on the path field.
+
+    The biggest potential drawback to this approach is that all hits to a particular path must go to the same chunk, and that chunk cannot be split by MongoDB, since all the documents in it have the same shard key. This might not be a problem if you have fairly even load on your website, but if one page gets a disproportionate number of hits, you can end up with a large chunk that is completely unsplittable that causes an unbalanced load on one shard.
+
++ **Option 4: Shard by combining a natural and synthetic key**
+
+    MongoDB supports compound shard keys that combine the best aspects of options 2 and 3. In these situations, the shard key would resemble `{ path: 1 , ssk: 1 }`, where path is an often-used natural key or value from your data and ssk is a hash of the `_id` field.
+
+    In most situations, these kinds of keys provide the ideal balance between distributing writes across the cluster and ensuring that most queries will only need to access a select number of shards.
+
+Selecting shard keys is difficult because there are no definitive “best practices,” the decision has a large impact on performance, and it is difficult or impossible to change the shard key after making the selection. The best solution is to test with your own data.
+
+**管理数据库大小**
+
++ **Capped collections**
+
+    Capped collections have a fixed size, and drop old data automatically when inserting new data after reaching cap. 但是在现在的版本中，it is not possible to shard capped collections.
+
++ **TTL collections**
+
+    If you want something like capped collections that can be sharded, you might consider using a “time to live” (TTL) index on that collection.
+
+        db.events.ensureIndex('time', expireAfterSeconds=3600)
+
+    缺点是，`remove()`方法性能没有优化，而且删除可能导致fragmentation
+
++ **Multiple collections, single database**
+
+    类似于rotate logfile的方法，rotate数据表
+
+    This approach has several advantages over the single collection approach:
+    * Collection renames are fast and atomic.
+    * MongoDB does not bring any documents into memory to drop a collection.
+    * MongoDB can effectively reuse space freed by removing entire collections without leading to data fragmentation.
+
+    Nevertheless, this operation may increase some complexity for queries, if any of your analyses depend on events that may reside in the current and previous collection. For most real-time data-collection systems, this approach is ideal.
+
++ **Multiple databases**
+
+    同上，但是rotate数据库
 
 
 
