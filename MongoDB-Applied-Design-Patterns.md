@@ -116,7 +116,7 @@ account的文档结构设计如下：
 
 ### Chapter 4 Operational Intelligence
 
-**使用MongoDB存储日志**
+#### 使用MongoDB存储日志
 
 By setting `w=0`, you do not require that MongoDB acknowledge receipt of the insert. Although this is the fastest option available to us, it also carries with it the risk that you might lose a large number of events before you notice.  
 
@@ -269,5 +269,137 @@ Selecting shard keys is difficult because there are no definitive “best practi
 
     同上，但是rotate数据库。缺点是程序会非常复杂。
 
+* * *
+
+#### 预处理报告
+
++ **One document per page per day, flat documents**
+
+    This approach has a couple of advantages:
+    * For every request on the website, you only need to update one document.
+    * Reports for time periods within the day, for a single page, require fetching a single document.
+
+    当文件增长后，MongoDB会不断的重新分配文件空间，会导致遇到后面性能越差。解决方案就是预分配，把所有字段都用0填充。另外，比如下面的minute字段，当接近12点时，update性能会变差，因为查找时间变长。
+
+        {
+            _id: "20101010/site-1/apache_pb.gif",
+            metadata: {
+                date: ISODate("2000-10-10T00:00:00Z"),
+                site: "site-1",
+                page: "/apache_pb.gif" },
+            daily: 5468426,
+            hourly: {
+                "0": 227850,
+                "1": 210231,
+                ...
+                "23": 20457 },
+            minute: {
+                "0": 3612,
+                "1": 3241,
+                ...
+                "1439": 2819 }
+        }
+
++ **One document per page per day, hierarchical documents**
+
+    接近这个问题，就是把minute按照小时进行分段：
+
+        minute: {
+            "0": {
+                "0": 3612,
+                "1": 3241,
+                ...
+                "59": 2130 },
+            "1": {
+                "60": ... ,
+            },
+            ...
+            "23": {
+                ...
+                "1439": 2819 }
+        }
+
++ **Separate documents by granularity level**
+
+    把每天的总数单独拿出来，按月份拆分成另外一个文档。这样打点记录时会调用两次update操作，但是按月查询时会提高效率。
+
+**预分配的技巧**
+    
+    While we could pre-allocate the documents all at once, this leads to poor performance during the pre-allocation time. A better solution is to pre-allocate the documents probabilistically each time we log a hit:
+
+        from random import random
+        from datetime import datetime, timedelta, time
+        
+        # Example probability based on 500k hits per day per page
+        prob_preallocate = 1.0 / 500000
+        
+        def log_hit(db, dt_utc, site, page):
+            if random.random() < prob_preallocate:
+            preallocate(db, dt_utc + timedelta(days=1), site_page)
+            # Update daily stats doc
+            ...
+
+#### Hierarchical Aggregation
+
+层级汇总，raw data -> stats.hourly -> stats.daily -> stats.monthly -> stats.yearly
+                                               |
+                                               |-> stats.weekly
+
+以hourly为例，`last_run`和`cutoff`两个变量防止重复统计，这样mapreduce可以任意时间运行任意多次
+
+    cutoff = datetime.utcnow() - timedelta(seconds=60)
+    query = { 'ts': { '$gt': last_run, '$lt': cutoff } }
+    
+    db.events.map_reduce(
+        map=mapf_hour,
+        reduce=reducef,
+        finalize=finalizef,
+        query=query,
+        out={ 'reduce': 'stats.hourly' })
+    
+    last_run = cutoff
+
+`mapf_hour`函数实现如下：
+
+    mapf_hour = bson.Code('''function() {
+        var key = {
+            u: this.userid,
+            d: new Date(
+                this.ts.getFullYear(),
+                this.ts.getMonth(),
+                this.ts.getDate(),
+                this.ts.getHours(),
+                0, 0, 0);
+        };
+
+        emit(
+            key,
+            {
+                total: this.length,
+                count: 1,
+                mean: 0,
+                ts: null });
+    }''')
+
+`reducef`函数实现如下：
+
+    reducef = bson.Code('''function(key, values) {
+        var r = { total: 0, count: 0, mean: 0, ts: null };
+        values.forEach(function(v) {
+            r.total += v.total;
+            r.count += v.count;
+        });
+        return r;
+    }''')
+
+`finalizef`函数实现如下：
+
+    finalizef = bson.Code('''function(key, value) {
+        if(value.count > 0) {
+            value.mean = value.total / value.count;
+        }
+        value.ts = new Date();
+        return value;
+    }''')
 
 
