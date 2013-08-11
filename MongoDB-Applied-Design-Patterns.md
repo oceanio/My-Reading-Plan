@@ -267,7 +267,7 @@ Selecting shard keys is difficult because there are no definitive “best practi
 
 + **Multiple databases**
 
-    同上，但是rotate数据库
+    同上，但是rotate数据库。缺点是程序会非常复杂。
 
 
 
