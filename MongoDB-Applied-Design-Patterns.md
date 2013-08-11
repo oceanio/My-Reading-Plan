@@ -324,26 +324,26 @@ Selecting shard keys is difficult because there are no definitive “best practi
     把每天的总数单独拿出来，按月份拆分成另外一个文档。这样打点记录时会调用两次update操作，但是按月查询时会提高效率。
 
 **预分配的技巧**
-    
-    While we could pre-allocate the documents all at once, this leads to poor performance during the pre-allocation time. A better solution is to pre-allocate the documents probabilistically each time we log a hit:
 
-        from random import random
-        from datetime import datetime, timedelta, time
-        
-        # Example probability based on 500k hits per day per page
-        prob_preallocate = 1.0 / 500000
-        
-        def log_hit(db, dt_utc, site, page):
-            if random.random() < prob_preallocate:
-            preallocate(db, dt_utc + timedelta(days=1), site_page)
-            # Update daily stats doc
-            ...
+While we could pre-allocate the documents all at once, this leads to poor performance during the pre-allocation time. A better solution is to pre-allocate the documents probabilistically each time we log a hit:
+
+    from random import random
+    from datetime import datetime, timedelta, time
+    
+    # Example probability based on 500k hits per day per page
+    prob_preallocate = 1.0 / 500000
+    
+    def log_hit(db, dt_utc, site, page):
+        if random.random() < prob_preallocate:
+        preallocate(db, dt_utc + timedelta(days=1), site_page)
+        # Update daily stats doc
+        ...
 
 #### Hierarchical Aggregation
 
-层级汇总，raw data -> stats.hourly -> stats.daily -> stats.monthly -> stats.yearly
-                                               |
-                                               |-> stats.weekly
+层级汇总，raw data -> stats.hourly -> stats.daily -> stats.monthly -> stats.yearly  
+                                               |  
+                                               |-> stats.weekly  
 
 以hourly为例，`last_run`和`cutoff`两个变量防止重复统计，这样mapreduce可以任意时间运行任意多次
 
