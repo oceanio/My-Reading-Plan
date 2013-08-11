@@ -341,21 +341,24 @@ While we could pre-allocate the documents all at once, this leads to poor perfor
 
 #### Hierarchical Aggregation
 
-层级汇总，raw data -> stats.hourly -> stats.daily -> stats.monthly -> stats.yearly  
-                                               |  
-                                               |-> stats.weekly  
+层级汇总，从raw data定时运行汇总任务，定时计算小时汇总，然后定时计算天的汇总，等等。
 
-以hourly为例，`last_run`和`cutoff`两个变量防止重复统计，这样mapreduce可以任意时间运行任意多次
+`last_run`和`cutoff`两个变量防止重复统计，这样mapreduce可以任意时间运行任意多次（发生了异常怎么办？会重复统计）
 
     cutoff = datetime.utcnow() - timedelta(seconds=60)
+
+    # First step is still special
     query = { 'ts': { '$gt': last_run, '$lt': cutoff } }
-    
     db.events.map_reduce(
-        map=mapf_hour,
-        reduce=reducef,
-        finalize=finalizef,
-        query=query,
+        map=mapf_hour, reduce=reducef,
+        finalize=finalizef, query=query,
         out={ 'reduce': 'stats.hourly' })
+
+    # But the other ones are not
+    h_aggregate(db.stats.hourly, db.stats.daily, mapf_day, cutoff, last_run)
+    h_aggregate(db.stats.daily, db.stats.weekly, mapf_week, cutoff, last_run)
+    h_aggregate(db.stats.daily, db.stats.monthly, mapf_month, cutoff, last_run)
+    h_aggregate(db.stats.monthly, db.stats.yearly, mapf_year, cutoff, last_run)
     
     last_run = cutoff
 
@@ -401,5 +404,36 @@ While we could pre-allocate the documents all at once, this leads to poor perfor
         value.ts = new Date();
         return value;
     }''')
+
+`h_aggregate`函数实现如下：
+
+    def h_aggregate(icollection, ocollection, mapf, cutoff, last_run):
+        query = { 'value.ts': { '$gt': last_run, '$lt': cutoff } }
+        icollection.map_reduce(
+            map=mapf,
+            reduce=reducef,
+            finalize=finalizef,
+            query=query,
+            out={ 'reduce': ocollection.name, 'sharded': True })
+
+    mapf_day = bson.Code(
+        mapf_hierarchical % '''new Date(
+            this._id.d.getFullYear(),
+            this._id.d.getMonth(),
+            this._id.d.getDate(),
+            0, 0, 0, 0)''')
+
+    mapf_hierarchical = '''function() {
+        var key = {
+            u: this._id.u,
+            d: %s };
+        emit(
+            key,
+            {
+                total: this.value.total,
+                count: this.value.count,
+                mean: 0,
+                ts: null });
+    }'''
 
 
