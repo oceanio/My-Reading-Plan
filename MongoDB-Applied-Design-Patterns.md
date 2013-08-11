@@ -116,7 +116,103 @@ account的文档结构设计如下：
 
 ### Chapter 4 Operational Intelligence
 
-使用MongoDB存储日志
+**使用MongoDB存储日志**
+
+By setting w=0, you do not require that MongoDB acknowledge receipt of the insert. Although this is the fastest option available to us, it also carries with it the risk that you might lose a large number of events before you notice.  
+
+    db.events.insert(event, w=0)
+
+If you want to ensure that MongoDB acknowledges inserts, you can omit the w=0 argument, or pass w=1 (the default) as follows:  
+
+    db.events.insert(event)
+    # Alternatively, you can do this
+    db.events.insert(event, w=1)
+
+This will force your application to acknowledge that the data has replicated to two members of the replica set. 
+
+    db.events.insert(event, w=2)
+
+**批量插入**
+
+批量插入的问题就是发生任何错误，只有一部分插入，后面的就停止了。如果忽略错误继续插入，使用`continue_on_error=True`参数。这样批量插入可以一直执行，但是如果发生多次失败，只能返回最后一次的错误。
+
+
+**管理索引内存**
+
+查看索引的内存，mongoDB要求索引全部加载到内存中，这也是mongoDB吃内存的原因。
+
+    db.command('collstats', 'events')['indexSizes']
+
+索引的顺序很重要，比如：
+
+    db.events.ensure_index([('time', 1), ('host', 1)])
+
+使用`explain()`分析查询效率：
+
+    { ..
+        u'cursor': u'BtreeCursor time_1_host_1',
+        u'indexBounds': {u'host': [[u'127.0.0.1', u'127.0.0.1']],
+            u'time': [
+                [ datetime.datetime(2000, 10, 10, 0, 0),
+                  datetime.datetime(2000, 10, 11, 0, 0)]]
+        },
+        ...
+        u'millis': 4,
+        u'n': 11,
+        u'nscanned': 1296,
+        u'nscannedObjects': 11,
+    ... }
+
+This query had to scan 1,296 items from the index to return 11 objects in 4 milliseconds.
+
+如果调整一下顺序：
+
+    db.events.ensure_index([('host', 1), ('time', 1)])
+
+Now, explain() tells us the following:
+
+    { ...
+        u'cursor': u'BtreeCursor host_1_time_1',
+        u'indexBounds': {u'host': [[u'127.0.0.1', u'127.0.0.1']],
+        u'time': [[datetime.datetime(2000, 10, 10, 0, 0),
+            datetime.datetime(2000, 10, 11, 0, 0)]]},
+        ...
+        u'millis': 0,
+        u'n': 11,
+        ...
+        u'nscanned': 11,
+        u'nscannedObjects': 11,
+        ...
+    }
+
+Here, the query had to scan 11 items from the index before returning 11 objects in less than a millisecond.
+
+**MongoDB的索引的注意点**
+
+* Any fields that will be queried by equality should occur first in the index definition.
+* Fields used to sort should occur next in the index definition. If multiple fields are
+being sorted (such as (last_name, first_name), then they should occur in the
+same order in the index definition.
+* Fields that are queried by range should occur last in the index definition.
+
+* Whenever we have a range query on two or more properties, they cannot both be
+used effectively in the index.
+* Whenever we have a range query combined with a sort on a different property, the
+index is somewhat less efficient than when doing a range and sort on the same
+property set.
+
+In such cases, the best approach is to test with representative data, making liberal use of explain(). If you discover that the MongoDB query optimizer is making a bad choice of index (perhaps choosing to reduce the number of entries scanned at the expense of doing a large in-memory sort, for instance), you can also use the hint() method to tell it which index to use.
+
+**Sharding Concern**
+
+In a sharded environment, the limitations on the maximum insertion rate are:
+* The number of shards in the cluster
+* The shard key you choose
+
+Ideally, your shard key should have two characteristics:
+* Insertions are balanced between shards
+* Most queries can be routed to a subset of the shards to be satisfied
+
 
 
 
