@@ -35,4 +35,6 @@ Notes on “Machine Learning in Action”
 The algorithm has to carry around the full dataset; for large datasets, this implies a large amount of storage. (Use big data??) In addition, you need to calculate the distance measurement for every piece of data in the database, and this can be cumbersome. One modification to kNN, called *kD-trees*, allows you to reduce the number of calculations.
 
 
+### Chapter 03 Splitting dataset one feature at a time: decision tree
+
 
