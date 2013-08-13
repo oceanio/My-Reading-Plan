@@ -15,7 +15,7 @@ Notes on “Machine Learning in Action”
     communicate the data, and utilize it effectively. But I do think those skills—of being
     able to access, understand, and communicate the insights you get from data analysis—
     are going to be extremely important. Managers need to be able to access and understand
-    the data themselves.
+    the data themselves.  
                                                     —McKinsey Quarterly, January 2009
 
 
