@@ -18,5 +18,21 @@ Notes on “Machine Learning in Action”
     the data themselves.  
                                                     —McKinsey Quarterly, January 2009
 
+### Chapter 02 Classifying with k-Nearest Neighbors
+
+**k-Nearest Neighbors**
+
+* Pros
+  High accuracy, insensitive to outliers, no assumptions about data
+
+* Cons
+  Computationally expensive, requires a lot of memory
+
+* Work with
+  Numeric values, nominal values
+
+
+The algorithm has to carry around the full dataset; for large datasets, this implies a large amount of storage. In addition, you need to calculate the distance measurement for every piece of data in the database, and this can be cumbersome. One modification to kNN, called kD-trees, allows you to reduce the number of calculations.
+
 
 
