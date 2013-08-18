@@ -37,4 +37,20 @@ The algorithm has to carry around the full dataset; for large datasets, this imp
 
 ### Chapter 03 Splitting dataset one feature at a time: decision tree
 
+> Decision trees are often used in expert systems  
 
+**Decision trees**
+
+* Pros:  
+  Computationally cheap to use, easy for humans to understand learned results,
+  missing values OK, can deal with irrelevant features  
+
+* Cons:  
+  Prone to overfitting  
+
+* Works with:  
+  Numeric values, nominal values  
+
+The measure of information of a set is known as the Shannon entropy. The higher the entropy, the more mixed up the data is. Starting with a dataset, you can measure the inconsistency of a set or the entropy to find a way to split the set until all the data belongs to the same class.
+
+The ID3 algorithm can split nominal-valued datasets. There are other decision tree–generating algorithms. The most popular are C4.5 and CART.
