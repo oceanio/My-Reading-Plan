@@ -51,8 +51,30 @@ The algorithm has to carry around the full dataset; for large datasets, this imp
 * Works with:  
   Numeric values, nominal values  
 
-A decision tree classifier is just like a work-flow diagram with the terminating blocks representing classification decisions. Starting with a dataset, you can measure the inconsistency of a set or the entropy to find a way to split the set until all the data belongs to the same class. The measure of information of a set is known as the Shannon entropy. The higher the entropy, the more mixed up the data is. 
+A decision tree classifier is just like a work-flow diagram with the terminating blocks representing classification decisions. Starting with a dataset, you can measure the inconsistency of a set or the entropy to find a way to split the set until all the data belongs to the same class.  
 
-entropy = -sum(p(x)*log2(p(x)))
+The measure of information of a set is known as the Shannon entropy. Entropy is defined as the expected value of the information. The higher the entropy, the more mixed up the data is. 
+
+entropy = -sum(p(x)*log(p(x), 2))
 
 The ID3 algorithm can split nominal-valued datasets. There are other decision tree–generating algorithms. The most popular are C4.5 and CART.
+
+### Chapter 04 Classifying with probability theory: naive Bayes
+
+**Naive Bayes**
+
+* Pros: 
+  Works with a small amount of data, handles multiple classes
+* Cons: 
+  Sensitive to how the input data is prepared
+* Works with: 
+  Nominal values
+
+bayes方法classifier是比较概率大小，可以将左右两边取对数，可以将乘法变为加法
+
+    p(x|a)*p(a) > p(x|b)*p(b)  
+    
+    ==>  ln(p(x|a)*p(a)) > ln(p(x|b)*p(b)) 
+    
+    ==> ln(p(x|a)) + ln(p(a)) > ln(p(x|b)) + ln(p(b))
+
