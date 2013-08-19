@@ -70,6 +70,13 @@ The ID3 algorithm can split nominal-valued datasets. There are other decision tr
 * Works with: 
   Nominal values
 
+There are a number of practical considerations when implementing naïve Bayes in
+a modern programming language. Underflow is one problem that can be addressed
+by using the logarithm of probabilities in your calculations. The bag-of-words model is
+an improvement on the set-of-words model when approaching document classification.
+There are a number of other improvements, such as removing stop words, and
+you can spend a long time optimizing a tokenizer.
+
 bayes方法classifier是比较概率大小，可以将左右两边取对数，可以将乘法变为加法
 
     p(x|a)*p(a) > p(x|b)*p(b)  
@@ -77,4 +84,7 @@ bayes方法classifier是比较概率大小，可以将左右两边取对数，�
     ==>  ln(p(x|a)*p(a)) > ln(p(x|b)*p(b)) 
     
     ==> ln(p(x|a)) + ln(p(a)) > ln(p(x|b)) + ln(p(b))
+
+另外，避免概率为0，使用拉普拉斯法p(x) = (x + 1)/(N + 2)
+
 
