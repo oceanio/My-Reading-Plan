@@ -51,6 +51,8 @@ The algorithm has to carry around the full dataset; for large datasets, this imp
 * Works with:  
   Numeric values, nominal values  
 
-The measure of information of a set is known as the Shannon entropy. The higher the entropy, the more mixed up the data is. Starting with a dataset, you can measure the inconsistency of a set or the entropy to find a way to split the set until all the data belongs to the same class.
+A decision tree classifier is just like a work-flow diagram with the terminating blocks representing classification decisions. Starting with a dataset, you can measure the inconsistency of a set or the entropy to find a way to split the set until all the data belongs to the same class. The measure of information of a set is known as the Shannon entropy. The higher the entropy, the more mixed up the data is. 
+
+entropy = -sum(p(x)*log2(p(x)))
 
 The ID3 algorithm can split nominal-valued datasets. There are other decision tree–generating algorithms. The most popular are C4.5 and CART.
