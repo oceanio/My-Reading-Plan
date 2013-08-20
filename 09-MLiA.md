@@ -116,3 +116,24 @@ as in batch processing.
 * Use a mean value from similar items.
 * Use another machine learning algorithm to predict the value.
 
+### Chapter 06 Support vector machines
+
+**Support vector machines**
+
+* Pros:  
+  Low generalization error, computationally inexpensive, easy to interpret results
+
+* Cons:  
+  Sensitive to tuning parameters and kernel choice; natively only handles binary classification
+
+* Works with:  
+  Numeric values, nominal values
+
+The points closest to the separating hyperplane are known as *support vectors*.  
+
+Support vector machines try to maximize margin by solving a quadratic optimization
+problem. Kernel methods, or the kernel trick, map data (sometimes nonlinear data) from a
+low-dimensional space to a high-dimensional space. The radial-bias function is a popular
+kernel that measures the distance between two vectors.
+
+
