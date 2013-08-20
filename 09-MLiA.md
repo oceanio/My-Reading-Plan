@@ -91,11 +91,28 @@ bayes方法classifier是比较概率大小，可以将左右两边取对数，�
 
 **Logistic regression**
 
-* Pros: 
+* Pros:  
   Computationally inexpensive, easy to implement, knowledge representation easy to interpret
-* Cons: 
+* Cons:  
   Prone to underfitting, may have low accuracy
-* Works with: 
+* Works with:  
   Numeric values, nominal values
 
+Logistic regression is finding best-fit parameters to a nonlinear function called the sigmoid.
+Methods of optimization can be used to find the best-fit parameters. Among the
+optimization algorithms, one of the most common algorithms is gradient ascent. Gradient
+ascent can be simplified with stochastic gradient ascent.
+
+Stochastic gradient ascent can do as well as gradient ascent using far fewer computing
+resources. In addition, stochastic gradient ascent is an online algorithm; it can
+update what it has learned as new data comes in rather than reloading all of the data
+as in batch processing.
+
+**dealing with missing values in the data**
+
+* Use the feature’s mean value from all the available data.
+* Fill in the unknown with a special value like -1.
+* Ignore the instance.
+* Use a mean value from similar items.
+* Use another machine learning algorithm to predict the value.
 
