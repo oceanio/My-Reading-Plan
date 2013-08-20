@@ -87,4 +87,15 @@ bayes方法classifier是比较概率大小，可以将左右两边取对数，�
 
 另外，避免概率为0，使用拉普拉斯法p(x) = (x + 1)/(N + 2)
 
+### Chapter 05 Logistic regression
+
+**Logistic regression**
+
+* Pros: 
+  Computationally inexpensive, easy to implement, knowledge representation easy to interpret
+* Cons: 
+  Prone to underfitting, may have low accuracy
+* Works with: 
+  Numeric values, nominal values
+
 
