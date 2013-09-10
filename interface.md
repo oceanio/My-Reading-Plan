@@ -450,7 +450,7 @@ implementation:
     			                {
     			                    "bool" : {
     					                "must" : {
-    					                    "term" : { "tag1" : "wow" }
+    					                    "terms" : { "tag1" : ["wow", "haha"] }
     					                },
     					                "must" : {
     					                    "term" : { "tag2" : "wow" }
@@ -465,6 +465,15 @@ implementation:
     					                        "age" : { "from" : 10, "to" : 20 }
     					                    }
     					                },
+    					                "should" : [
+    					                    {
+    					                        "term" : { "tag1" : "sometag" }
+    					                    },
+    					                    {
+    					                        "term" : { "tag3" : "sometagtag" }
+    					                    }
+    					                ],
+    					                "minimum_should_match" : 1,
     					            }
     			                },
     			                {
