@@ -433,6 +433,87 @@ response:
 
 ### Candidate Search
 
+implementation:
+
+    {
+    	"query" : {
+    		"custom_filters_score" : {
+    	        "query" : {
+    	            "filtered" : {
+    			        "query" : {
+    			            "query_string" : {
+    					        "query" : "this AND that OR thus"
+    					    }
+    			        },
+    			        "filter" : {
+    			            "and" : [
+    			                {
+    			                    "bool" : {
+    					                "must" : {
+    					                    "term" : { "tag1" : "wow" }
+    					                },
+    					                "must" : {
+    					                    "term" : { "tag2" : "wow" }
+    					                },
+    					                "must_not" : {
+    					                    "range" : {
+    					                        "age" : { "from" : 10, "to" : 20 }
+    					                    }
+    					                },
+    					                "must_not" : {
+    					                    "range" : {
+    					                        "age" : { "from" : 10, "to" : 20 }
+    					                    }
+    					                },
+    					            }
+    			                },
+    			                {
+    			                    "bool" : {
+    					                "should" : [
+    					                    {
+    					                        "term" : { "tag1" : "sometag" }
+    					                    },
+    					                    {
+    					                        "term" : { "tag3" : "sometagtag" }
+    					                    }
+    					                ],
+    					                "minimum_should_match" : 1,
+    					            }
+    			                }
+    			            ]
+    			        }
+    			    }
+    	        },
+    	        "filters" : [
+    	            {
+    	                "filter" : { "range" : { "age" : {"from" : 0, "to" : 10} } },
+    	                "boost" : "3"
+    	            },
+    	            {
+    	                "filter" : { 
+    	                	"bool" : {
+    			                "should" : [
+    			                    {
+    			                        "term" : { "tag1" : "sometag" }
+    			                    },
+    			                    {
+    			                        "term" : { "tag2" : "sometag" }
+    			                    },
+    			                    {
+    			                        "term" : { "tag3" : "sometagtag" }
+    			                    }
+    			                ],
+    			                "minimum_should_match" : 2,
+    			            }
+    	                },
+    	                "boost" : "2"
+    	            }
+    	        ],
+    	        "score_mode" : "total"
+    	    }
+    	}
+    }
+
 request: 
 
     POST /api/candidate_search
