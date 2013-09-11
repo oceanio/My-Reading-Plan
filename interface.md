@@ -522,7 +522,8 @@ implementation:
     	    }
     	},
     	"facet" : {},
-    	"suggest" : {}
+    	"suggest" : {},
+    	"sort" : {}
     }
 
 request: 
