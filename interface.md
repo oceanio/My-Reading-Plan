@@ -821,7 +821,7 @@ response:
 
 request:
 
-    POST /api/candidate_saved_search_get
+    POST /api/candidate_saved_criteria_get
     data : {
         id  : 0,
     }
@@ -891,7 +891,7 @@ response:
 
 request:
 
-    POST /api/candidate_saved_search_list
+    POST /api/candidate_saved_criteria_list
     data : {
         page_no     : 0,            //current page number
         page_step   : 0,            //how many items you want to show per page
