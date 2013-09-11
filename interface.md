@@ -523,7 +523,8 @@ implementation:
     	},
     	"facet" : {},
     	"suggest" : {},
-    	"sort" : {}
+    	"sort" : {},
+    	"highlight" : {}
     }
 
 request: 
