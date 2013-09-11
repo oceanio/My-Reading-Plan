@@ -520,7 +520,9 @@ implementation:
     	        ],
     	        "score_mode" : "total"
     	    }
-    	}
+    	},
+    	"facet" : {},
+    	"suggest" : {}
     }
 
 request: 
