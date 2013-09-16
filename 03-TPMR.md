@@ -57,3 +57,31 @@ This book is about mr algo design, particularly for text processing.
     possible to start copying intermediate key-value pairs over the network to the
     nodes running the reducers as soon as each mapper finishes - this is a common
     optimization and implemented in Hadoop.
+
+* Error and fault handling
+
+    The MapReduce execution framework must accomplish
+    all the tasks above in an environment where errors and faults are
+    the norm, not the exception.
+    
+**Partitioners and Combiners**
+
+Partitioners are responsible for dividing up the intermediate key space and
+assigning intermediate key-value pairs to reducers. The simplest partitioner involves computing
+the hash value of the key and then taking the mod of that value with the
+number of reducers.  
+
+Note, however, that the partitioner only considers the key and ignores the value|therefore,
+a roughly-even partitioning of the key space may nevertheless yield large differences
+in the number of key-values pairs sent to each reducer (since different
+keys may have different numbers of associated values). This imbalance in the
+amount of data associated with each key is relatively common in many text
+processing applications due to the Zipfian distribution of word occurrences.
+
+Combiners are an optimization in MapReduce that allow for local aggregation
+before the shuffle and sort phase. In many cases, proper use of combiners can spell the difference between an
+impractical algorithm and an efficient algorithm. It
+suffices to say for now that a combiner can signifficantly reduce the amount
+of data that needs to be copied over the network, resulting in much faster
+algorithms.  
+
