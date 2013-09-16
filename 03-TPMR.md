@@ -9,17 +9,17 @@ This book is about mr algo design, particularly for text processing.
 
 **Algo 2.1 Word Count**
 
-    class MAPPER
-        method MAP(docid a, doc d)
-            for all term t in doc d do
-                EMIT(term t, count 1)
-                
-    class REDUCER
-        method REDUCE(term t, counts [c1, c2, ...])
-            sum = 0
-            for all count c in counts [c1, c2, ...] do
-                sum += c
-            EMIT(term t, count sum)
+    class Mapper
+		method Map(docid a, doc d):
+			for all term t in doc d:
+				Emit(term t, count 1)
+
+	class Reducer
+		method Reduce(term t, counts [c1, c2, ...]):
+			sum = 0
+			for all count c 2 counts [c1, c2, ...]:
+				sum = sum + c
+			Emit(term t, count sum)
             
 **The Execution Framework**
 
@@ -91,11 +91,167 @@ algorithms.
 
 ### Chapter 03 Basic MR Alog Design
 
-#### 3.1 Local Aggregation
-
 **Combiners and In-Mapper Combining**
 
+Instead of emitting intermediate output for every input
+key-value pair, the mapper aggregates partial results across multiple
+input records and only emits intermediate key-value pairs after some
+amount of local aggregation is performed.  
 
+	class Mapper
+		method Initialize():
+			H = {}
 
+		method Map(docid a, doc d):
+			for all term t in doc d:
+				H[t] = H[t] + 1
+		
+		method Close():
+			for all term t in H:
+				Emit(term t, count H[t])
 
+there is a fundamental scalability bottleneck
+associated with the in-mapper combining pattern. It critically depends
+on having sufficient memory to store intermediate results until the mapper has
+completely processed all key-value pairs in an input split.  
+
+> Heap's Law, a well-known result in information retrieval, accurately models the growth of vocabulary size as a function of the collection size - the somewhat surprising fact is that the vocabulary size never stops growing.
+
+One common solution to limiting memory usage when using the in-mapper
+combining technique is to "block" input key-value pairs and "flush" in-memory
+data structures periodically.  
+
+**Algorithmic Correctness with Local Aggregation**
+
+In general, the mean of means of arbitrary subsets of a set of numbers is not
+the same as the mean of the set of numbers. So how to calculate average?
+
+	class Mapper
+		method Map(string t, integer r):
+			Emit(string t, integer r)
+
+	class Reducer
+		method Reduce(string t, integers [r1, r2, ...]):
+			sum = 0
+			cnt = 0
+			for all integer r in integers [r1, r2, ...]:
+				sum = sum + r
+				cnt = cnt + 1
+			ravg = sum/cnt
+			Emit(string t, integer ravg)
+
+After optimization
+
+	class Mapper
+		method Initialize():
+			S = {}
+			C = {}
+
+		method Map(string t, integer r):
+			S[t] = S[t] + r
+			C[t] = C[t] + 1
+
+		method Close():
+			for all term t in S:
+				Emit(term t, pair (S[t], C[t]))
+
+	class Reducer
+		method Reduce(string t, pairs [(s1, c1), (s2, c2), ...]):
+			sum = 0
+			cnt = 0
+			for all pair (s, c) in pairs [(s1, c1), (s2, c2), ...]:
+				sum = sum + s
+				cnt = cnt + c
+			ravg = sum/cnt
+			Emit(string t, integer ravg)
+
+**Pairs and Stripes**
+
+The co-occurance of keywords, The neighbors of a word can either
+be defined in terms of a sliding window or some other contextual unit such as
+a sentence.  
+
+the "pairs" approach
+
+	class Mapper
+		method Map(docid a, doc d):
+			for all term w in doc d:
+				for all term u in Neighbors(w):
+					Emit(pair (w, u), count 1)  #Emit count for each occurrence
+
+	class Reducer
+		method Reduce(pair p, counts [c1, c2, ...]):
+			s = 0
+			for all count c in counts [c1, c2, ...]:
+				s = s + c 	#Sum co-occurrence counts
+			Emit(pair p, count s)
+
+the "stripes" approach
+	
+	class Mapper
+		method Map(docid a, doc d):
+			for all term w in doc d:
+				H = {}
+				for all term u in Neighbors(w):
+					H[u] = H[u] + 1 	#Tally words co-occurring with w
+				Emit(Term w, Stripe H)
+
+	class Reducer
+		method Reduce(term w, stripes [H1, H2, H3, ...]):
+			Hf = {}
+			for all stripe H in stripes [H1, H2, H3, ...]:
+				Sum(Hf, H) 		#Element-wise sum
+			Emit(term w, stripe Hf)
+
+In the pairs approach, we
+keep track of each joint event separately, whereas in the stripes approach
+we keep track of all events that co-occur with the same event. Although
+the stripes approach is signicantly more ecient, it requires memory
+on the order of the size of the event space, which presents a scalability
+bottleneck.
+
+**Computing Relative Frequencies**
+
+"Order inversion", where the main idea is to convert the sequencing of
+computations into a sorting problem. Through careful orchestration, we
+can send the reducer the result of a computation (e.g., an aggregate statistic)
+before it encounters the data necessary to produce that computation.
+
+* Emitting a special key-value pair for each co-occurring word pair in the
+mapper to capture its contribution to the marginal.
+
+* Controlling the sort order of the intermediate key so that the key-value
+pairs representing the marginal contributions are processed by the reducer
+before any of the pairs representing the joint word co-occurrence counts.
+
+* Defining a custom partitioner to ensure that all pairs with the same left
+word are shuffled to the same reducer.
+
+* Preserving state across multiple keys in the reducer to first compute the
+marginal based on the special key-value pairs and then dividing the joint
+counts by the marginals to arrive at the relative frequencies.
+
+**Secondary Sorting**
+
+"Value-to-key conversion", which provides a scalable solution for secondary
+sorting. By moving part of the value into the key, we can exploit
+the MapReduce execution framework itself for sorting.
+
+**Techniques used in controlling synchronization**
+
+1. Constructing complex keys and values that bring together data necessary
+for a computation. This is used in all of the above design patterns.
+
+2. Executing user-specified initialization and termination code in either the
+mapper or reducer. For example, in-mapper combining depends on emission
+of intermediate key-value pairs in the map task termination code.
+
+3. Preserving state across multiple inputs in the mapper and reducer. This
+is used in in-mapper combining, order inversion, and value-to-key conversion.
+
+4. Controlling the sort order of intermediate keys. This is used in order
+inversion and value-to-key conversion.
+
+5. Controlling the partitioning of the intermediate key space. This is used
+in order inversion and value-to-key conversion.
 
