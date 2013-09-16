@@ -85,3 +85,17 @@ suffices to say for now that a combiner can signifficantly reduce the amount
 of data that needs to be copied over the network, resulting in much faster
 algorithms.  
 
+**HDFS**
+
+**Hadoop Architecture**
+
+### Chapter 03 Basic MR Alog Design
+
+#### 3.1 Local Aggregation
+
+**Combiners and In-Mapper Combining**
+
+
+
+
+
