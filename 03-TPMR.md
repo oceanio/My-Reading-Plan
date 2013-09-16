@@ -255,3 +255,78 @@ inversion and value-to-key conversion.
 5. Controlling the partitioning of the intermediate key space. This is used
 in order inversion and value-to-key conversion.
 
+
+### Chapter 04 Inverted Indexing for Text Retrieval
+
+**Web Crawling**
+
+* A web crawler must practice good "etiquette" and not overload web
+servers.
+
+* Since a crawler has finite bandwidth and resources, it must prioritize
+the order in which unvisited pages are downloaded. Such decisions must
+be made online and in an adversarial environment, in the sense that
+spammers actively create "link farms" and "spider traps" full of spam
+pages to trick a crawler into overrepresenting content from a particular
+site.
+
+* Most real-world web crawlers are distributed systems that run on clusters
+of machines, often geographically distributed.
+
+* Web content changes, but with different frequency depending on both the
+site and the nature of the content.
+
+* The web is full of duplicate content.
+
+* The web is multilingual.
+
+**Inverted Indexes: Baseline Implementation**
+
+	class Mapper
+		procedure Map(docid n, doc d):
+			H = {}
+			for all term t in doc d:
+				H[t] = H[t] + 1
+			for all term t in H:
+				Emit(term t, posting (n,H[t]))
+
+	class Reducer
+		procedure Reduce(term t, postings [(n1, f1), (n2, f2), ...]):
+			P = []
+			for all posting (a, f) 2 postings [(n1, f1i, (n2, f2), ...]:
+				Append(P, (a, f))
+			Sort(P)
+			Emit(term t, postings P)
+
+**Inverted Indexing: Revised Implementation**
+
+class Mapper
+	method Map(docid n, doc d):
+		H = {}
+		for all term t in doc d:
+			H[t] = H[t] + 1
+		for all term t in H:
+			Emit(tuple (t, n), tf H[t])
+
+class Reducer
+	method Initialize():
+		tprev = None
+		P = []
+
+	method Reduce(tuple (t, n), tf [f])
+		if t != tprev and tprev != None then:
+			Emit(term tprev, postings P)
+			P.Reset()
+		P:Add((n, f))
+		tprev = t
+
+	method Close():
+		Emit(term t, postings P)
+
+**Index Compression**
+
+**What About Retrieval?**
+
+### Chapter 05 Graph Algorithms
+
+
