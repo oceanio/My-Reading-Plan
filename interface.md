@@ -70,7 +70,7 @@ response:
     data : {
         ret_code    : 0,            //int, 0 for success; other for failure
         err_str     : "",           //string, error description
-        user_id     : 0             //int, user id
+        _id     : 0                 //int, user id
     }
 
 
@@ -80,7 +80,7 @@ request:
 
     POST /api/company_user_rmv
     data : {
-        user_id     : 0,            //int, user id, key to delete a user
+        _id     : 0,                //int, user id, key to delete a user
     }
 
 response: 
@@ -96,7 +96,7 @@ request:
 
     POST /api/company_user_set
     data : {
-        user_id     : 0,            //int, user id, key to edit a user's profile
+        _id     : 0,                //int, user id, key to edit a user's profile
         attributes  : {
             email       : "",
             telephone   : "",
@@ -130,7 +130,7 @@ request:
 
     POST /api/company_user_get
     data : {
-        user_id     : 0,            //int, user id, key to get a user's profile
+        _id     : 0,                //int, user id, key to get a user's profile
     }
 
 response: 
@@ -138,7 +138,7 @@ response:
     data : {
         ret_code    : 0,            //int, 0 for success; other for failure
         err_str     : "",           //string, error description
-        user_id     : 0,            //int, user id, key to edit a user's profile
+        _id     : 0,                //int, user id, key to edit a user's profile
         company     : "",           //string, company name
         username    : "",           //string, user name
         attributes  : {
@@ -186,7 +186,7 @@ response:
         last_page   : 0,            //last page no
         user_profiles: [
             {
-                user_id     : 0,            //int, user id, key to edit a user's profile
+                _id     : 0,                //int, user id, key to edit a user's profile
                 company     : "",           //string, company name
                 username    : "",           //string, user name
                 attributes  : {
@@ -218,7 +218,7 @@ response:
     data : {
         ret_code    : 0,            //int, 0 for success; other for failure
         err_str     : "",           //string, error description
-        group_id    : 0             //int, group id
+        _id    : 0                  //int, group id
     }
 
 ### Company Group Remove
@@ -227,7 +227,7 @@ request:
 
     POST /api/company_group_rmv
     data : {
-        group_id     : 0,            //int, group id, key to delete a group
+        _id     : 0,                 //int, group id, key to delete a group
     }
 
 response: 
@@ -243,7 +243,7 @@ request:
 
     POST /api/company_group_set
     data : {
-        group_id    : 0,            //int, group id, key to edit a group's profile
+        _id    : 0,                 //int, group id, key to edit a group's profile
         attributes  : {
             ...,                    // any attributes we want
             description : "",
@@ -263,7 +263,7 @@ request:
 
     POST /api/company_group_get
     data : {
-        group_id    : 0,            //int, group id, key to get a group's profile
+        _id    : 0,                 //int, group id, key to get a group's profile
     }
 
 response: 
@@ -271,7 +271,7 @@ response:
     data : {
         ret_code    : 0,            //int, 0 for success; other for failure
         err_str     : "",           //string, error description
-        group_id    : 0,            //int, group id, key to edit a group's profile
+        _id    : 0,                 //int, group id, key to edit a group's profile
         company     : "",           //string, company name
         attributes  : {
             ...,                    // any attributes we want
@@ -304,7 +304,7 @@ response:
         last_page   : 0,            //last page no
         group_info  : [
             {
-                group_id    : 0,            //int, group id, key to edit a group's profile
+                _id    : 0,                 //int, group id, key to edit a group's profile
                 company     : "",           //string, company name
                 attributes  : {
                     ...,                    // any attributes we want
@@ -335,7 +335,7 @@ response:
     data : {
         ret_code    : 0,            //int, 0 for success; other for failure
         err_str     : "",           //string, error description
-        role_id     : 0             //int, role id
+        _id     : 0                 //int, role id
     }
 
 ### Company Role Remove
@@ -344,7 +344,7 @@ request:
 
     POST /api/company_role_rmv
     data : {
-        role_id     : 0,            //int, role id, key to delete a role
+        _id     : 0,                //int, role id, key to delete a role
     }
 
 response: 
@@ -360,7 +360,7 @@ request:
 
     POST /api/company_role_set
     data : {
-        role_id     : 0,            //int, role id, key to edit a role's permission
+        _id     : 0,                //int, role id, key to edit a role's permission
         permissions : [             //array of strings, role permissions
             ...
         ]
@@ -379,7 +379,7 @@ request:
 
     POST /api/company_role_get
     data : {
-        role_id     : 0,            //int, group id, key to get a role's permission
+        _id     : 0,                //int, group id, key to get a role's permission
     }
 
 response: 
@@ -387,7 +387,7 @@ response:
     data : {
         ret_code    : 0,            //int, 0 for success; other for failure
         err_str     : "",           //string, error description
-        role_id     : 0,            //int, role id
+        _id     : 0,                //int, role id
         company     : "",           //string, company name
         permissions : [             //array of strings, role permissions
             ...
@@ -419,7 +419,7 @@ response:
         last_page   : 0,            //last page no
         group_info  : [
             {
-                role_id     : 0,            //int
+                _id     : 0,                //int
                 company     : "",           //string, company name
                 permissions : [             //array of strings, role permissions
                     ...
