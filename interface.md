@@ -435,6 +435,8 @@ response:
 
 implementation:
 
+elasticsearch 默认占用1G内存，要根据机器的实际配置调整heap_size参数，否则会触发OOM，异常退出
+
     {
     	"query" : {
     		"custom_filters_score" : {
