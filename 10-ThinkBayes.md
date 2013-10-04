@@ -94,4 +94,18 @@ into the next step of the analysis to perform some kind of decision analysis
 
 ### Chapter 07 Prediction
 
+In mathematical statistics, a **process** is a stochastic model of a physical system.
+
+A Bernoulli process is a model of a sequence of events, called
+trials, in which each trial has two possible outcomes, like success and failure.
+
+A Poisson process is the continuous version of a Bernoulli process, where
+an event can occur at any point in time with equal probability. Poisson
+processes can be used to model customers arriving in a store, buses arriving
+at a bus stop, or goals scored in a hockey game.
+
+
+
+
+
 
