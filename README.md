@@ -6,7 +6,7 @@ My Intensive Reading Plan
 | --- | ---- | ------ |
 | 00   | Bayesian Methods for Hackers | ongoing (ch05) |
 | 01   | Deep Learning of Representations | planned  |
-| 02   | MapReduce Algo for text processing | ongoing (ch03) |
+| 02   | MapReduce Algo for text processing | [ongoing (ch03)](./02-TPMR.md) |
 | 03   | MongoDB Applied Design Patterns |  [ongoing (ch05)](./03-MADP.md)  |
 | 04   | Deep Learning for NLP | ongoing (p39) |
 | 05   | Hadoop: The Definitive Guide | planned |
