@@ -98,7 +98,6 @@ Distribution and PMF
 
     class M_and_M(Suite):
         """Map from hypothesis (A or B) to probability."""
-
         mix94 = dict(brown=30,
                      yellow=20,
                      red=20,
@@ -115,12 +114,10 @@ Distribution and PMF
 
         hypoA = dict(bag1=mix94, bag2=mix96)
         hypoB = dict(bag1=mix96, bag2=mix94)
-
         hypotheses = dict(A=hypoA, B=hypoB)
 
         def Likelihood(self, data, hypo):
             """Computes the likelihood of the data under the hypothesis.
-
             hypo: string hypothesis (A or B)
             data: tuple of string bag, string color
             """
@@ -129,18 +126,77 @@ Distribution and PMF
             like = mix[color]
             return like
 
-
     def main():
         suite = M_and_M('AB')
-
         suite.Update(('bag1', 'yellow'))
         suite.Update(('bag2', 'green'))
-
         suite.Print()
 
 ### Chapter 03 Estimation
 
-幂次原理：PMF(x)和(1/x)**alpha成正比 (alpha一般接近于1.0)
+**The dice problem**
+
+Suppose I have a box of dice that contains a 4-sided die, a 6-sided die, an
+8-sided die, a 12-sided die, and a 20-sided die. Suppose I select a die from the box at random, roll it, and get a 6. What is the probability that I rolled each die?  
+
+    class Dice(Suite):
+    """Represents hypotheses about which die was rolled."""
+        def Likelihood(self, data, hypo):
+            """Computes the likelihood of the data under the hypothesis.
+            hypo: integer number of sides on the die
+            data: integer die roll
+            """
+            if hypo < data:
+                return 0
+            else:
+                return 1.0/hypo
+
+    def main():
+        suite = Dice([4, 6, 8, 12, 20])
+
+        suite.Update(6)
+        print 'After one 6'
+        suite.Print()
+        """
+        4 0.0
+        6 0.392156862745
+        8 0.294117647059
+        12 0.196078431373
+        20 0.117647058824
+        """
+
+        for roll in [4, 8, 7, 7, 2]:
+            suite.Update(roll)
+        print 'After more rolls'
+        suite.Print()
+        """
+        4 0.0
+        6 0.0
+        8 0.943248453672
+        12 0.0552061280613
+        20 0.0015454182665
+        """
+
+**The locomotive problem**
+
+A railroad numbers its locomotives in order 1..N. One day you
+see a locomotive with the number 60. Estimate how many locomotives
+the railroad has.  
+
+幂次原理：PMF(x)和(1/x)**alpha成正比 (alpha一般接近于1.0)  
+
+    class Train2(Dice):
+        """Represents hypotheses about how many trains the company has."""
+
+        def __init__(self, hypos, alpha=1.0):
+            """Initializes the hypotheses with a power law distribution.
+            hypos: sequence of hypotheses
+            alpha: parameter of the power law prior
+            """
+            Pmf.__init__(self)
+            for hypo in hypos:
+                self.Set(hypo, hypo**(-alpha))
+            self.Normalize()
 
 Among Bayesians, there are two approaches to choosing prior distributions: informative and uninformative.  
 informative priors often seem subjective.
@@ -154,6 +210,35 @@ Pmf; others are faster with a Cdf.
 
 ### Chapter 04 More Estimation
 
+**The Euro problem**
+
+    class Euro2(thinkbayes.Suite):
+        """Represents hypotheses about the probability of heads."""
+
+        def Likelihood(self, data, hypo):
+            """Computes the likelihood of the data under the hypothesis.
+            hypo: integer value of x, the probability of heads (0-100)
+            data: tuple of (number of heads, number of tails)
+            """
+            x = hypo / 100.0
+            heads, tails = data
+            like = x**heads * (1-x)**tails
+            return like
+
+    def TrianglePrior():
+        """Makes a Suite with a triangular prior."""
+        suite = Euro()
+        for x in range(0, 51):
+            suite.Set(x, x)
+        for x in range(51, 101):
+            suite.Set(x, 100-x) 
+        suite.Normalize()
+        return suite
+
+    heads, tails = 140, 110
+    suite.Update((heads, tails))
+    print 'CI', thinkbayes.CredibleInterval(suite, 90) # The result is (51, 61).
+
 **Cromwell’s rule**, which is the recommendation
 that you should avoid giving a prior probability of 0 to any hypothesis
 that is even remotely possible  
@@ -165,6 +250,61 @@ The odds form of Bayes's theorem
     o(A|D) = o(A) p(D|A)/p(D|B)
 
 p(D|A)/p(D|B), is also called **Bayes factor**
+
+**Oliver’s blood**
+
+Two people have left traces of their own blood at the scene of
+a crime. A suspect, Oliver, is tested and found to have type ‘O’
+blood. The blood groups of the two traces are found to be of type
+‘O’ (a common type in the local population, having frequency
+60%) and of type ‘AB’ (a rare type, with frequency 1%). Do these
+data [the traces found at the scene] give evidence in favor of the
+proposition that Oliver was one of the people [who left blood at
+the scene]?  
+
+A: Oliver is one of the criminal
+B: Oliver is not one of the criminal
+D: the data (an O and an AB)
+
+P(A|D)/P(B|D) = P(A)P(D|A)/P(B)P(D|B)
+
+| hypo  | Prior | Likelihood |
+| ----- | ----- | ---------- |
+| A     | 1/2   | 0.01       |
+| B     | 1/2   | 0.6*0.01*2 |
+
+**Addends**: Sum of pmf
+
+    def __add__(self, other):
+        pmf = Pmf()
+        for v1, p1 in self.Items():
+            for v2, p2 in other.Items():
+                pmf.Incr(v1+v2, p1*p2)
+        return pmf
+
+**Maxima**: max of cdf, for example, CDF(5) is the probability that a value
+from this distribution is less than or equal to 5
+
+    def Max(self, k):
+        cdf = self.Copy()
+        cdf.ps = [p**k for p in cdf.ps]
+        return cdf
+
+*k, 表示次数, 比如丢k次骰子，这k次中的最大值*
+
+**Mixtures**
+
+    pmf_dice = thinkbayes.Pmf()
+    pmf_dice.Set(Die(4), 2)
+    pmf_dice.Set(Die(6), 3)
+    pmf_dice.Set(Die(8), 2)
+    pmf_dice.Set(Die(12), 1)
+    pmf_dice.Set(Die(20), 1)
+    pmf_dice.Normalize()
+    mix = thinkbayes.Pmf()
+    for die, weight in pmf_dice.Items():
+        for outcome, prob in die.Items():
+            mix.Incr(outcome, weight*prob)
 
 ### Chapter 06 Decision Analysis
 
