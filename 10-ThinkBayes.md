@@ -20,10 +20,29 @@ Most often we simplify things by specifying a set of hypotheses that are
 * **Collectively exhaustive**: There are no other possibilities; at least one of the
 hypotheses has to be true.
 
+**The M&M problem**
+
+In 1995, they introduced blue M&M’s. Before then, the color mix in a bag
+of plain M&M’s was 30% Brown, 20% Yellow, 20% Red, 10% Green, 10%
+Orange, 10% Tan. Afterward it was 24% Blue , 20% Green, 16% Orange,
+14% Yellow, 13% Red, 13% Brown.  
+
+Suppose a friend of mine has two bags of M&M’s, and he tells me that one
+is from 1994 and one from 1996. He won’t tell me which is which, but he
+gives me one M&M from each bag. One is yellow and one is green. What is
+the probability that the yellow one came from the 1994 bag?
+
+* A: Bag 1 is from 1994, which implies that Bag 2 is from 1996.
+* B: Bag 1 is from 1996 and Bag 2 from 1994.
+
 | hypo  | Prior | Likelihood |     | Posterior |
 | ----- | ----- | ---------- | --- | --------- |
 | A | 1/2 | 20*20 | 200 | 20/27 |
 | B | 1/2 | 10*14 | 70 | 7/27 |
+
+**The Monty Hall problem**
+
+
 
 ### Chapter 02 Computational Statistics
 
