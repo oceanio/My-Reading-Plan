@@ -3,6 +3,11 @@ Think Bayes
 
 ### Chapter 01 Bayes's Therorem
 
+**条件概率: ** P(A|B)
+**联合概率: ** P(AB) = P(A)P(B|A)
+
+    P(AB) = P(BA)
+
     P(H|D) = P(H)P(D|H)/P(D)
 
 * P(H) is the probability of the hypothesis before we see the data, called the prior probability, or just **prior**.
@@ -14,6 +19,11 @@ Most often we simplify things by specifying a set of hypotheses that are
 * **Mutually exclusive**: At most one hypothesis in the set can be true, and
 * **Collectively exhaustive**: There are no other possibilities; at least one of the
 hypotheses has to be true.
+
+| hypo  | Prior | Likelihood |     | Posterior |
+| ----- | ----- | ---------- | --- | --------- |
+| A | 1/2 | 20*20 | 200 | 20/27 |
+| B | 1/2 | 10*14 | 70 | 7/27 |
 
 ### Chapter 02 Computational Statistics
 
