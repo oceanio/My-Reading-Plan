@@ -35,14 +35,42 @@ the probability that the yellow one came from the 1994 bag?
 * A: Bag 1 is from 1994, which implies that Bag 2 is from 1996.
 * B: Bag 1 is from 1996 and Bag 2 from 1994.
 
-| hypo  | Prior | Likelihood |     | Posterior |
-| ----- | ----- | ---------- | --- | --------- |
-| A | 1/2 | 20*20 | 200 | 20/27 |
-| B | 1/2 | 10*14 | 70 | 7/27 |
+| hypo  | Prior  | Likelihood |            | Posterior |
+|       | P(H)   | P(D/H)     | P(H)P(D|H) | P(H|D)    |
+| ----- | -----  | ---------- | ---------- | --------- |
+| A     | 1/2    | 20*20      | 200        | 20/27     |
+| B     | 1/2    | 10*14      | 70         | 7/27      |
 
 **The Monty Hall problem**
 
+* Monty shows you three closed doors and tells you that there is a prize
+behind each door: one prize is a car, the other two are less valuable
+prizes like peanut butter and fake finger nails. The prizes are arranged
+at random.
 
+* The object of the game is to guess which door has the car. If you guess
+right, you get to keep the car.
+
+* You pick a door, which we will call Door A. We’ll call the other doors
+B and C.
+
+* Before opening the door you chose, Monty increases the suspense by
+opening either Door B or C, whichever does not have the car. (If the
+car is actually behind Door A, Monty can safely open B or C, so he
+chooses one at random.)
+
+* Then Monty offers you the option to stick with your original choice or
+switch to the one remaining unopened door.
+
+* D: Monty chooses Door B and there is no car there.
+* A/B/C: the car is behind Door A, Door B, or Door C.
+
+| hypo  | Prior  | Likelihood |            | Posterior |
+|       | P(H)   | P(D/H)     | P(H)P(D|H) | P(H|D)    |
+| ----- | -----  | ---------- | ---------- | --------- |
+| A     | 1/3    | 1/2        | 1/6        | 1/3       |
+| B     | 1/3    | 0          | 0          | 0         |
+| C     | 1/3    | 1          | 1/3        | 2/3       |
 
 ### Chapter 02 Computational Statistics
 
