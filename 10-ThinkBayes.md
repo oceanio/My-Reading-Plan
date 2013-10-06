@@ -3,8 +3,8 @@ Think Bayes
 
 ### Chapter 01 Bayes's Therorem
 
-**条件概率: ** P(A|B)
-**联合概率: ** P(AB) = P(A)P(B|A)
+**条件概率: ** P(A|B)  
+**联合概率: ** P(AB) = P(A)P(B|A)  
 
     P(AB) = P(BA)
 
