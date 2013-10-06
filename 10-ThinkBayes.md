@@ -35,11 +35,10 @@ the probability that the yellow one came from the 1994 bag?
 * A: Bag 1 is from 1994, which implies that Bag 2 is from 1996.
 * B: Bag 1 is from 1996 and Bag 2 from 1994.
 
-| hypo  | Prior  | Likelihood |            | Posterior |
-|       | P(H)   | P(D/H)     | P(H)P(D|H) | P(H|D)    |
-| ----- | -----  | ---------- | ---------- | --------- |
-| A     | 1/2    | 20*20      | 200        | 20/27     |
-| B     | 1/2    | 10*14      | 70         | 7/27      |
+| hypo  | Prior | Likelihood |     | Posterior |
+| ----- | ----- | ---------- | --- | --------- |
+| A     | 1/2   | 20*20      | 200 | 20/27     |
+| B     | 1/2   | 10*14      | 70  | 7/27      |
 
 **The Monty Hall problem**
 
@@ -66,7 +65,6 @@ switch to the one remaining unopened door.
 * A/B/C: the car is behind Door A, Door B, or Door C.
 
 | hypo  | Prior  | Likelihood |            | Posterior |
-|       | P(H)   | P(D/H)     | P(H)P(D|H) | P(H|D)    |
 | ----- | -----  | ---------- | ---------- | --------- |
 | A     | 1/3    | 1/2        | 1/6        | 1/3       |
 | B     | 1/3    | 0          | 0          | 0         |
