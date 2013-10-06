@@ -198,6 +198,13 @@ the railroad has.
                 self.Set(hypo, hypo**(-alpha))
             self.Normalize()
 
+    hypos = xrange(1, 1001)
+    suite = Train2(hypos)
+
+    dataset = [30, 60, 90]
+    for data in dataset:
+        suite.Update(data)
+
 Among Bayesians, there are two approaches to choosing prior distributions: informative and uninformative.  
 informative priors often seem subjective.
 
@@ -292,7 +299,7 @@ from this distribution is less than or equal to 5
 
 *k, 表示次数, 比如丢k次骰子，这k次中的最大值*
 
-**Mixtures**
+**Mixtures**: choose a die from the box and roll it. What is the distribution of the outcome?
 
     pmf_dice = thinkbayes.Pmf()
     pmf_dice.Set(Die(4), 2)
