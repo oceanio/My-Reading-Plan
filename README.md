@@ -15,4 +15,4 @@ My Intensive Reading Plan
 | 08   | Big Data for Chimps | planned |
 | 09   | Machine Learning in Action | ongoing(ch04) |
 | 10   | Think Bayes | planned |
-
+| 11   | Programming Collective Intelligence | planned |
