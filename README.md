@@ -16,3 +16,4 @@ My Intensive Reading Plan
 | 09   | Machine Learning in Action | ongoing(ch04) |
 | 10   | Think Bayes | planned |
 | 11   | Programming Collective Intelligence | planned |
+| 12   | Bandit Algorithms for Website Optimization | planned |
