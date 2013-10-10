@@ -315,6 +315,19 @@ from this distribution is less than or equal to 5
 
 ### Chapter 06 Decision Analysis
 
+**The Price is Right problem**
+
+* Before seeing the prizes, what prior beliefs should the contestant have
+about the price of the showcase?
+* After seeing the prizes, how should the contestant update those beliefs?
+* Based on the posterior distribution, what should the contestant bid?
+
+The third question demonstrates a common use of Bayesian analysis: decision
+analysis. Given a posterior distribution, we can choose the bid that
+maximizes the contestant’s expected return.  
+
+**Use PDF to estimate prior**
+
 PDF: is the continuous version of a PMF, where the possible values make up a continuous range rather than a discrete
 set.  
 
@@ -336,6 +349,8 @@ KDE: is an algorithm that takes a sample and finds an appropriately smooth PDF t
     n = 101
     xs = numpy.linspace(low, high, n)
     pmf = pdf.MakePmf(xs)
+
+
 
 Likelihood doesn’t need to compute a probability; it only has
 to compute something proportional to a probability.
