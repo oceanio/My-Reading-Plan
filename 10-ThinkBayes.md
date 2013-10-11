@@ -493,3 +493,98 @@ next two and win the third. Again, we can compute the total probability:
     
     # split the next two, win the third
     p_series += 2 * p_win * (1-p_win) * p_win
+
+
+Chapter 08 Observer Bias
+
+**The Red Line problem**
+
+When I arrived at the station, I could estimate the time until the next train
+based on the number of passengers on the platform. If there were only a
+few people, I inferred that I just missed a train and expected to wait about 7
+minutes. If there were more passengers, I expected the train to arrive sooner.
+But if there were a large number of passengers, I suspected that trains were
+not running on schedule, so I would go back to the street level and get a
+taxi. While I was waiting for trains, I thought about how Bayesian estimation
+could help predict my wait time and decide when I should give up and
+take a taxi.
+
+**Observer Bias**
+
+values from the actual distribution are oversampled in proportion to their value.
+Students think that classes are bigger than they are because more of them are in the big classes.
+Airline passengers think that planes are fuller than they are because more
+of them are on full flights.
+
+    def BiasPmf(pmf):
+        new_pmf = pmf.Copy()
+        for x, p in pmf.Items():
+        new_pmf.Mult(x, x)
+        new_pmf.Normalize()
+        return new_pmf
+
+**Wait Time**
+
+Wait time, which I call y, is the time between the arrival of a passenger and
+the next arrival of a train. Elapsed time, which I call x, is the time between
+the arrival of the previous train and the arrival of a passenger. I chose these
+definitions so that zb = x + y.  
+
+Given the distribution of zb, we can compute the distribution of y.
+
+    def PmfOfWaitTime(pmf_zb):
+        metapmf = thinkbayes.Pmf()
+        for gap, prob in pmf_zb.Items():
+            uniform = MakeUniformPmf(0, gap)
+            metapmf.Set(uniform, prob)
+        pmf_y = thinkbayes.MakeMixture(metapmf)
+        return pmf_y
+
+    class WaitTimeCalculator(object):
+        def __init__(self, pmf_z):
+            self.pmf_z = pmf_z
+            self.pmf_zb = BiasPmf(pmf_z)
+            self.pmf_y = self.PmfOfWaitTime(self.pmf_zb)
+            self.pmf_x = self.pmf_y
+
+**Predicting Wait Time**
+
+* Use the distribution of z to compute the prior distribution of zp, the
+time between trains as seen by a passenger.
+* Then we can use the number of passengers to estimate the distribution
+of x, the elapsed time since the last train.
+* Finally, we use the relation y = zp - x to get the distribution of y.
+
+
+    wtc = WaitTimeCalculator(pmf_z)
+
+    class ElapsedTimeEstimator(object):
+        def __init__(self, wtc, lam, num_passengers):
+            self.prior_x = Elapsed(wtc.pmf_x)
+            self.post_x = self.prior_x.Copy()
+            self.post_x.Update((lam, num_passengers))
+            self.pmf_y = PredictWaitTime(wtc.pmf_zb, self.post_x)
+
+    class Elapsed(thinkbayes.Suite):
+        def Likelihood(self, data, hypo):
+            x = hypo
+            lam, k = data
+            like = thinkbayes.EvalPoissonPmf(lam * x, k)
+            return like
+
+    def PredictWaitTime(pmf_zb, pmf_x):
+        pmf_y = pmf_zb - pmf_x
+        RemoveNegatives(pmf_y)
+        return pmf_y
+        
+    def RemoveNegatives(pmf):
+        for val in pmf.Values():
+            if val < 0:
+                pmf.Remove(val)
+        pmf.Normalize()
+
+**Estimating the arrival rate**
+
+
+
+
