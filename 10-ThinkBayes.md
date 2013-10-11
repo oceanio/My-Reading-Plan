@@ -549,12 +549,13 @@ Given the distribution of zb, we can compute the distribution of y.
 
 **Predicting Wait Time**
 
-* Use the distribution of z to compute the prior distribution of zp, the
-time between trains as seen by a passenger.
-* Then we can use the number of passengers to estimate the distribution
-of x, the elapsed time since the last train.
-* Finally, we use the relation y = zp - x to get the distribution of y.
+Use the distribution of z to compute the prior distribution of zp, the
+time between trains as seen by a passenger.  
 
+Then we can use the number of passengers to estimate the distribution
+of x, the elapsed time since the last train.  
+
+Finally, we use the relation y = zp - x to get the distribution of y.  
 
     wtc = WaitTimeCalculator(pmf_z)
 
