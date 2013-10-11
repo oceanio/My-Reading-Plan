@@ -350,7 +350,17 @@ KDE: is an algorithm that takes a sample and finds an appropriately smooth PDF t
     xs = numpy.linspace(low, high, n)
     pmf = pdf.MakePmf(xs)
 
+**建模**
 
+对选手进行建模：
+
+    class Player(object):
+        def __init__(self, prices, bids, diffs):
+            self.pdf_price = thinkbayes.EstimatedPdf(prices)
+            self.cdf_diff = thinkbayes.MakeCdfFromList(diffs)
+            mu = 0
+            sigma = numpy.std(diffs)
+            self.pdf_error = thinkbayes.GaussianPdf(mu, sigma)
 
 Likelihood doesn’t need to compute a probability; it only has
 to compute something proportional to a probability.
@@ -361,6 +371,14 @@ to compute something proportional to a probability.
         error = price - guess
         like = self.player.ErrorDensity(error)
         return like 
+
+通过历史数据更新模型：
+
+    def MakeBeliefs(self, guess):
+        pmf = self.PmfPrice()
+        self.prior = Price(pmf, self)
+        self.posterior = self.prior.Copy()
+        self.posterior.Update(guess)
 
 Bayesian methods are most useful when you can carry the posterior distribution
 into the next step of the analysis to perform some kind of decision analysis
