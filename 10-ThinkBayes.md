@@ -393,6 +393,37 @@ into the next step of the analysis to perform some kind of decision analysis
 
 ### Chapter 07 Prediction
 
+**The Boston Bruins problem**
+
+In the 2010-11 National Hockey League (NHL) Finals, my beloved Boston
+Bruins played a best-of-seven championship series against the despised
+Vancouver Canucks. Boston lost the first two games 0-1 and 2-3, then won
+the next two games 8-1 and 4-0. At this point in the series, what is the probability
+that Boston will win the next game, and what is their probability of
+winning the championship?
+
+First, it is reasonable to believe that goal scoring in hockey is at least
+approximately a Poisson process
+
+* Use statistics from previous games to choose a prior distribution for lamda
+* Use the score from the first four games to estimate lamda for each team
+* Use the posterior distributions of lamda to compute distribution of goals
+for each team, the distribution of the goal differential, and the probability
+that each team wins the next game.
+* Compute the probability that each team wins the series.
+
+**The Prior**
+
+根据网上的历史数据分析，The distribution is roughly Gaussian with mean 2.8 and standard
+deviation 0.3.
+
+    class Hockey(thinkbayes.Suite):
+        def __init__(self):
+            pmf = thinkbayes.MakeGaussianPmf(2.7, 0.3, 4)
+            thinkbayes.Suite.__init__(self, pmf)
+
+**Poisson processes**
+
 In mathematical statistics, a **process** is a stochastic model of a physical system.
 
 A Bernoulli process is a model of a sequence of events, called
@@ -403,8 +434,62 @@ an event can occur at any point in time with equal probability. Poisson
 processes can be used to model customers arriving in a store, buses arriving
 at a bus stop, or goals scored in a hockey game.
 
+**The posteriors**
 
+    def Likelihood(self, data, hypo):
+        lam = hypo
+        k = data
+        like = thinkbayes.EvalPoissonPmf(lam, k)
+        return like
+        
+    suite1 = Hockey('bruins')
+    suite1.UpdateSet([0, 2, 8, 4])
+    
+    suite2 = Hockey('canucks')
+    suite2.UpdateSet([1, 3, 1, 0])
 
+根据更新后的概率模型，计算概率分布：
 
+    def MakeGoalPmf(suite):
+        metapmf = thinkbayes.Pmf()
+        for lam, prob in suite.Items():
+            pmf = thinkbayes.MakePoissonPmf(lam, 10)
+            metapmf.Set(pmf, prob)
+        mix = thinkbayes.MakeMixture(metapmf)
+        return mix
 
+对比赛结果进行建模：
 
+    goal_dist1 = MakeGoalPmf(suite1)
+    goal_dist2 = MakeGoalPmf(suite2)
+    diff = goal_dist1 - goal_dist2
+    
+    p_win = diff.ProbGreater(0)
+    p_loss = diff.ProbLess(0)
+    p_tie = diff.Prob(0)
+
+如果有突然死亡规则，需要对进球时间进行建模：
+
+    def MakeGoalTimePmf(suite):
+        metapmf = thinkbayes.Pmf()
+        for lam, prob in suite.Items():
+            pmf = thinkbayes.MakeExponentialPmf(lam, high=2, n=2001)
+            metapmf.Set(pmf, prob)
+        mix = thinkbayes.MakeMixture(metapmf)
+        return mix
+
+    time_dist1 = MakeGoalTimePmf(suite1)
+    time_dist2 = MakeGoalTimePmf(suite2)
+    
+    p_tie = diff.Prob(0)
+    p_overtime = thinkbayes.PmfProbLess(time_dist1, time_dist2)
+    p_win = diff.ProbGreater(0) + p_tie * p_overtime
+
+To win the series, the Bruins can either win the next two games or split the
+next two and win the third. Again, we can compute the total probability:
+
+    # win the next two
+    p_series = p_win**2
+    
+    # split the next two, win the third
+    p_series += 2 * p_win * (1-p_win) * p_win
