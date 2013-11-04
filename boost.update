@@ -1,0 +1,14 @@
+yum install libicu-devel
+yum install libicu
+yum install icu
+export ICU_PATH=/usr
+export ICU_LINK=-L/usr/lib64
+export EXPAT_INCLUDE=/usr/include
+export EXPAT_LIBPATH=/usr/lib64
+yum install openmpi-devel
+yum install expat-devel
+./bootstrap.sh --prefix=/usr
+Edit project-config.jam
+add
+using mpi;
+./bjam install
