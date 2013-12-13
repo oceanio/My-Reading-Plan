@@ -17,3 +17,4 @@ My Intensive Reading Plan
 | 10   | Think Bayes | planned |
 | 11   | Programming Collective Intelligence | planned |
 | 12   | Bandit Algorithms for Website Optimization | planned |
+| 13   | Mining of Massive Datasets | planned |
