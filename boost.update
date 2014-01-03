@@ -12,3 +12,22 @@ Edit project-config.jam
 add
 using mpi;
 ./bjam install
+
+#!/bin/bash
+iptables -F
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+iptables -P INPUT DROP
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -A OUTPUT -j ACCEPT
+iptables -A INPUT -i lo -j ACCEPT
+iptables -t nat -L -n
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -p icmp -j ACCEPT
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A INPUT -p tcp --dport 9001 -j ACCEPT
+iptables -A INPUT -p tcp --dport 3000 -j ACCEPT
+#iptables -A INPUT -p tcp --dport 3306 -j ACCEPT
+service iptables save
+service iptables restart
+iptables -L -v
